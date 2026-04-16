@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terminal Access</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0d0; /* Классический зеленый */
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #terminal {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        /* Эффект мигающего курсора */
+        #cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #0d0;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .error { color: #f00; }
+        .success { color: #fff; font-weight: bold; text-shadow: 0 0 5px #fff; }
+        
+        button {
+            background: none;
+            border: 1px solid #0d0;
+            color: #0d0;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: none; /* Появится в конце */
+            margin-top: 20px;
+        }
+        button:hover { background: #0d0; color: #000; }
+    </style>
+</head>
+<body>
+
+<div id="terminal"></div>
+<div id="cursor"></div>
+<button id="actionBtn" onclick="alert('Файл скачан: secret_docs.zip')">ОТКРЫТЬ РАСШИФРОВАННЫЕ ДАННЫЕ</button>
+
+<script>
+    const log = [
+        "> Initializing USB interface...",
+        "> Device detected: Generic Flash Drive 64GB",
+        "> Scanning file system: FAT32",
+        "> Warning: Encrypted partition found.",
+        "> Starting cascade bypass [Mode: Aggressive]...",
+        "0x4F22A - Memory Dump Success",
+        "0x1A44C - Brute forcing key...",
+        "..............................",
+        "> ERROR: Firewall detected. Redirecting...",
+        "> Handshake established.",
+        "> ACCESS GRANTED.",
+        "> DECRYPTING: ██████████████ 100%"
+    ];
+
+    const terminal = document.getElementById('terminal');
+    const btn = document.getElementById('actionBtn');
+    let lineIndex = 0;
+
+    function typeLine() {
+        if (lineIndex < log.length) {
+            let p = document.createElement('div');
+            
+            // Раскрашиваем финальную строку
+            if (log[lineIndex].includes("GRANTED")) p.className = "success";
+            if (log[lineIndex].includes("ERROR")) p.className = "error";
+
+            p.textContent = log[lineIndex];
+            terminal.appendChild(p);
+            lineIndex++;
+            
+            // Прокрутка вниз
+            window.scrollTo(0, document.body.scrollHeight);
+            
+            // Скорость печати: случайная для реализма
+            setTimeout(typeLine, Math.random() * 500 + 200);
+        } else {
+            btn.style.display = "block"; // Показываем кнопку в конце
+        }
+    }
+
+    // Запуск через секунду после загрузки
+    setTimeout(typeLine, 1000);
+</script>
+
+</body>
+</html>
